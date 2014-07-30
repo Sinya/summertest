@@ -15,6 +15,12 @@ group :production do
   gem 'rails_12factor'
 end
 
+# Use fake info for testing
+gem 'faker'
+# To Use ActiveModel has secure password
+gem 'bcrypt', '~> 3.1.0'
+# 台灣各新聞網站新聞解析器
+gem 'taiwanese_news_parser'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'

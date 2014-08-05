@@ -1,11 +1,14 @@
 Rails.application.routes.draw do
+
+  resources :users
+  resources :posts
   resources :news
+  resource :session, only: [ :new, :create, :destroy ]
 
   # get 'root/home'
   # This maps to the root#home action
   root to:'root#home'
-  
-  resources :users
+  get '/sandbox', to: 'root#sandbox' if Rails.env.development?
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

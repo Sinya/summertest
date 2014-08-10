@@ -4,6 +4,12 @@ Rails.application.routes.draw do
   resources :posts
   resources :news
   resource :session, only: [ :new, :create, :destroy ]
+  resources :users do
+    get 'followers', on: :member
+    get 'followed_users', on: :member
+    post 'follow', on: :member
+    delete 'unfollow', on: :member
+  end
 
   # get 'root/home'
   # This maps to the root#home action

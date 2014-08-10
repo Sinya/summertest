@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :follow, :unfollow, :followers, :followed_users ]
+  before_action :authenticate_user, except: [ :new, :create ]
 
   # GET /users
   # GET /users.json
@@ -58,6 +59,42 @@ class UsersController < ApplicationController
     end
   end
 
+  def follow
+    if current_user?(@user) # 這個用戶是你自己嗎
+      flash[:error] = "You cannot follow yourself"
+    elsif current_user.following?(@user) #已經關注這個用戶了
+      flash[:error] = "You already follow #{@user.name}"
+    else
+      unless current_user.follow(@user).nil? #若關注成功
+        flash[:success] = "You are following #{@user.name}"
+      else
+        flash[:error] = "Something went wrong. You cannot follow #{@user.name}"
+      end
+    end
+    redirect_to @user
+  end
+
+  def unfollow
+    if current_user.unfollow(@user) #如果成功取消關注
+      flash[:success] = "You no longer follow #{@user.name}"
+    else 
+      flash[:error] = "You cannot unfollow #{@user.name}"
+    end
+    redirect_to @user
+  end
+
+  def followers
+    @users = @user.followers
+  end
+
+  def followed_users
+    @users = @user.followed_users
+  end
+
+  def show
+    @posts = @user.posts
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
@@ -68,4 +105,7 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
+
+
+
 end
